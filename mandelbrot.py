@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def mandelbrot(c, max_iter):
+    z = 0
+    n = 0
+    while abs(z) <= 2 and n < max_iter:
+        z = z**2 + c
+        n += 1
+    return n
+
+def mandelbrot_set(xmin, xmax, ymin, ymax, width, height, max_iter):
+    r1 = np.linspace(xmin, xmax, width)
+    r2 = np.linspace(ymin, ymax, height)
+    return (r1, r2, np.array([[mandelbrot(complex(r, i), max_iter) for r in r1] for i in r2]))
+
+def display(xmin, xmax, ymin, ymax, width, height, max_iter):
+    d = mandelbrot_set(xmin, xmax, ymin, ymax, width, height, max_iter)
+    colors = np.random.rand(width, height, 3)  # Generate random colors
+    plt.imshow(d[2], extent=(xmin, xmax, ymin, ymax), cmap='twilight', norm=None)
+    plt.show()
+
+def display_rotated(xmin, xmax, ymin, ymax, width, height, max_iter):
+    d = mandelbrot_set(xmin, xmax, ymin, ymax, width, height, max_iter)
+    plt.imshow(d[2].T[::-1], extent=(ymin, ymax, xmin, xmax), cmap='twilight', norm=None)  # Transpose and flip horizontally
+    plt.show()
+
+# Define the range and resolution of the Mandelbrot set
+xmin, xmax, ymin, ymax = -2.0, 1.0, -1.5, 1.5
+width, height = 1000, 1000
+max_iter = 256
+
+plt.figure(figsize=(10, 10))
+display(xmin, xmax, ymin, ymax, width, height, max_iter)
+display_rotated(xmin, xmax, ymin, ymax, width, height, max_iter)
+plt.figure(figsize=(10, 10))
+display(xmin, xmax, ymin, ymax, width, height, max_iter)
